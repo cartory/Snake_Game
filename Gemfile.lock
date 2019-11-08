@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    minitest (5.13.0)
+    ruby2d (0.9.2)
+
+PLATFORMS
+  x64-mingw32
+
+DEPENDENCIES
+  minitest (~> 5)
+  ruby2d (~> 0.9.2)
+
+BUNDLED WITH
+   2.0.2
