@@ -24,8 +24,8 @@ module View
         end
         #renderiza segun el estado
         def render(state)
-            render_snake(state)
             render_food(state)
+            render_snake(state)
         end
         
         private
