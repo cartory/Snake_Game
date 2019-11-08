@@ -19,7 +19,7 @@ module Model
     class Grid < Struct.new(:rows, :cols)
     end
     #Estado
-    class State < Struct.new(:snake, :food, :grid, :next_direction, :game_finished)
+    class State < Struct.new(:snake, :food, :grid, :curr_direction, :game_finished)
     end
     #Estado inicial del juego
     def self.initial_state
