@@ -5,8 +5,8 @@ module Actions
         next_position = calc_next_position(state)
         
         if position_is_food?(state, next_position)
-            grow_snake_to(state, next_position)
-        #verificar que la sig casilla es valida
+            state = grow_snake_to(state, next_position)
+            generate_food(state)
         elsif position_is_valid?(state, next_position)
             #SI => Movemos la serpiente
             move_snake_to(state, next_position)
@@ -26,6 +26,15 @@ module Actions
     end
 
     private
+
+    def self.generate_food(state)
+        new_food = Model::Food.new(
+            rand(state.grid.rows),
+            rand(state.grid.cols)
+        )
+        state.food = new_food
+        return state
+    end
 
     def self.position_is_food?(state, next_position)
         return (
