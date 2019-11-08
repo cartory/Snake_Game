@@ -1,0 +1,90 @@
+[1mdiff --git a/src/app.rb b/src/app.rb[m
+[1mindex 6daaacd..445721d 100644[m
+[1m--- a/src/app.rb[m
+[1m+++ b/src/app.rb[m
+[36m@@ -8,9 +8,9 @@[m [mclass App[m
+     end[m
+ [m
+     def start[m
+[31m-        view = View::Ruby2dView.new[m
+[31m-        Thread.new { init_timer(view) }[m
+[31m-        view.start(@state)[m
+[32m+[m[32m        @view = View::Ruby2dView.new(self)[m
+[32m+[m[32m        Thread.new { init_timer(@view) }[m
+[32m+[m[32m        @view.start(@state)[m
+     end[m
+ [m
+     def init_timer(view)[m
+[36m@@ -20,6 +20,16 @@[m [mclass App[m
+             sleep 0.5[m
+         end[m
+     end[m
+[32m+[m
+[32m+[m[32m    def send_action(action, params)[m
+[32m+[m[32m        #:change_direction, Model::Direction::UP[m
+[32m+[m[32m        new_state = Actions.send(action, @state, params)[m
+[32m+[m[32m        if new_state.hash != @state.hash[m
+[32m+[m[32m            @state = new_state[m
+[32m+[m[32m            @view.render(@state)[m
+[32m+[m[32m        end[m
+[32m+[m[32m    end[m
+[32m+[m
+ end[m
+ [m
+ app = App.new[m
+[1mdiff --git a/src/view/ruby2d.rb b/src/view/ruby2d.rb[m
+[1mindex 218b8d4..a09c449 100644[m
+[1m--- a/src/view/ruby2d.rb[m
+[1m+++ b/src/view/ruby2d.rb[m
+[36m@@ -1,10 +1,11 @@[m
+ require 'Ruby2D'[m
+[31m-[m
+[32m+[m[32mrequire_relative "../model/state"[m
+ module View[m
+     class Ruby2dView[m
+         #constructor[m
+[31m-        def initialize[m
+[32m+[m[32m        def initialize(app)[m
+             @pixel_size = 50[m
+[32m+[m[32m            @app = app[m
+         end[m
+         # pinta el escenario[m
+         def start(state)[m
+[36m@@ -14,6 +15,11 @@[m [mmodule View[m
+                 width: @pixel_size * state.grid.cols, [m
+                 height: @pixel_size * state.grid.rows[m
+             )[m
+[32m+[m[32m            on :key_down do |event|[m
+[32m+[m[32m                # A key was pressed[m
+[32m+[m[32m                handle_key_event(event)[m
+[32m+[m[32m                # puts event.key[m
+[32m+[m[32m            end[m
+             show[m
+         end[m
+         #renderiza segun el estado[m
+[36m@@ -49,5 +55,22 @@[m [mmodule View[m
+                 color: 'yellow',[m
+             )[m
+         end[m
+[32m+[m
+[32m+[m[32m        def handle_key_event(event)[m
+[32m+[m[32m            case event.key[m
+[32m+[m[32m            when "up"[m
+[32m+[m[32m                # cambiar direccion hacia arriba[m
+[32m+[m[32m                @app.send_action(:change_direction, Model::Direction::UP)[m
+[32m+[m[32m            when "down"[m
+[32m+[m[32m                # cambiar direccion hacia abajo[m
+[32m+[m[32m                @app.send_action(:change_direction, Model::Direction::DOWN)[m
+[32m+[m[32m            when "left"[m
+[32m+[m[32m                # cambiar direccion hacia izquierda[m
+[32m+[m[32m                @app.send_action(:change_direction, Model::Direction::LEFT)[m
+[32m+[m[32m            when "right"[m
+[32m+[m[32m                # cambiar direccion hacia derecha[m
+[32m+[m[32m                @app.send_action(:change_direction, Model::Direction::RIGHT)[m
+[32m+[m[32m            end[m
+[32m+[m[32m        end[m
+     end[m
+[31m-end[m
+\ No newline at end of file[m
+[32m+[m[32mend[m[41m [m
+\ No newline at end of file[m
